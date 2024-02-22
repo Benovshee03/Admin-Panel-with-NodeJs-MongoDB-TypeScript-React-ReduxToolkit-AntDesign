@@ -1,8 +1,7 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   MenuUnfoldOutlined,
   MenuFoldOutlined,
-  VideoCameraOutlined,
 } from "@ant-design/icons";
 import { Layout, Button } from "antd";
 

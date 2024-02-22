@@ -1,10 +1,9 @@
-import React, { useState } from "react";
 import {
   UploadOutlined,
   UserOutlined,
   VideoCameraOutlined,
 } from "@ant-design/icons";
-import { Layout, Menu, theme } from "antd";
+import { Layout, Menu } from "antd";
 
 const { Sider } = Layout;
 export interface ISiderMenuProps {
