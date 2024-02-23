@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Row,Col, Table,Result,Button } from "antd";
-import { CategoryType ,columns} from "./types";
+import {  columns} from "./types";
 import { UserAppDispatch,useAppSelector } from "../../app/hooks";
 import { fetchCategories } from "./categorySlice";
 
