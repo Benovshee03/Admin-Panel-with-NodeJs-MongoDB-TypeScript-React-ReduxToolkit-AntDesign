@@ -2,7 +2,7 @@ import React from "react";
 import { Button, Form, Input } from "antd";
 import { UserAppDispatch, useAppSelector } from "../../app/hooks";
 import { postCategory } from "./categorySlice";
-import { Category } from "./types";
+import { useNavigate } from "react-router-dom";
 const layout = {
   labelCol: { span: 8 },
   wrapperCol: { span: 16 },
@@ -22,8 +22,9 @@ const validateMessages = {
 
 const Create: React.FC = () => {
   const dispatch = UserAppDispatch();
-
+  const navigate = useNavigate()
   const onFinish = (values: any) => {
+    navigate('/categories')
     dispatch(postCategory(values));
     console.log(values);
   };

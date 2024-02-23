@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { Category, CategoryState } from "./types";
 import http from "../../common/utils/api";
+import { stat } from "fs";
 
 const initialState: CategoryState = {
   list: [],
@@ -19,7 +20,7 @@ export const fetchCategories = createAsyncThunk(
 
 export const deleteCategory = createAsyncThunk("", async (id: string) => {
   const response = await http.delete(`categories/${id}`);
-  return response;
+  return response.data;
 });
 
 export const postCategory = createAsyncThunk(
@@ -40,7 +41,11 @@ const categorySlice = createSlice({
         state.status = "succeeded";
         state.list = action.payload;
       })
-      .addCase(deleteCategory.fulfilled, (state, action) => {})
+      .addCase(deleteCategory.fulfilled, (state, action) => {
+        state.list=state.list.filter(
+                (category:Category)=>category._id !== (action.payload as any)
+            )
+    })
       .addCase(postCategory.fulfilled, (state, action) => {});
   },
 });
