@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { Category, CategoryState } from "./types";
+import { Category, CategoryState} from "./types";
 import http from "../../common/utils/api";
-import { stat } from "fs";
+import { RootState } from "../../app/store";
 
 const initialState: CategoryState = {
   list: [],
@@ -30,23 +30,41 @@ export const postCategory = createAsyncThunk(
     return response.data;
   }
 );
-
+export const fetchCategory = createAsyncThunk<
+  Category,
+  string,
+  { rejectedValue: string; state: RootState }
+>("categories/fetchCategory", async (id,{rejectWithValue}) => {
+  try{
+    const response = await http.get(`/categories/${id}`)
+    return response.data
+  }
+  catch(error : any ){
+    return rejectWithValue(error.message)
+  }
+});
 const categorySlice = createSlice({
   name: "category",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
+    .addCase(fetchCategory.fulfilled,(state,action)=>{
+      state.selected = action.payload
+      state.status = "succeeded"
+    })
       .addCase(fetchCategories.fulfilled, (state, action) => {
         state.status = "succeeded";
         state.list = action.payload;
       })
       .addCase(deleteCategory.fulfilled, (state, action) => {
-        state.list=state.list.filter(
-                (category:Category)=>category._id !== (action.payload as any)
-            )
-    })
-      .addCase(postCategory.fulfilled, (state, action) => {});
+        state.list = state.list.filter(
+          (category: Category) => category._id !== (action.payload as any)
+        );
+      })
+      .addCase(postCategory.fulfilled, (state, action) => {
+        state.status="succeeded"
+      });
   },
 });
 
