@@ -28,6 +28,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import Card from "antd/es/card/Card";
 import ModalEdit from "../../components/Modal";
+import CategoryDetail from "./components/categoryDetail";
 const List: React.FC = () => {
   const dispatch = UserAppDispatch();
   const navigate = useNavigate();
@@ -39,7 +40,7 @@ const List: React.FC = () => {
   const [content, setContent] = useState<React.ReactNode | null>(null);
 
   useEffect(() => {
-    setContent(category?.categoryName);
+    setContent(<CategoryDetail category={category}/>);
   }, [category]);
   const OnDetailsHandle = (e: boolean, id?: string) => {
     if (id) {

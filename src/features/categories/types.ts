@@ -1,4 +1,3 @@
-import { TableProps } from "antd";
 export interface Category {
   _id?: string;
   categoryName?: string;

@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { Category, CategoryState} from "./types";
+import { Category, CategoryState } from "./types";
 import http from "../../common/utils/api";
 import { RootState } from "../../app/store";
 
@@ -34,25 +34,32 @@ export const fetchCategory = createAsyncThunk<
   Category,
   string,
   { rejectedValue: string; state: RootState }
->("categories/fetchCategory", async (id,{rejectWithValue}) => {
-  try{
-    const response = await http.get(`/categories/${id}`)
-    return response.data
-  }
-  catch(error : any ){
-    return rejectWithValue(error.message)
+>("categories/fetchCategory", async (id, { rejectWithValue }) => {
+  try {
+    const response = await http.get(`/categories/${id}`);
+    return response.data;
+  } catch (error: any) {
+    return rejectWithValue(error.message);
   }
 });
+
+export const updateCategory = createAsyncThunk(
+  "categories/updateCategory",
+  async ({ id, category }: { id: string; category: Category }) => {
+    const response = await http.patch(`/categories/${id}`, category);
+    return response.data;
+  }
+);
 const categorySlice = createSlice({
   name: "category",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
-    .addCase(fetchCategory.fulfilled,(state,action)=>{
-      state.selected = action.payload
-      state.status = "succeeded"
-    })
+      .addCase(fetchCategory.fulfilled, (state, action) => {
+        state.selected = action.payload;
+        state.status = "succeeded";
+      })
       .addCase(fetchCategories.fulfilled, (state, action) => {
         state.status = "succeeded";
         state.list = action.payload;
@@ -62,8 +69,17 @@ const categorySlice = createSlice({
           (category: Category) => category._id !== (action.payload as any)
         );
       })
+      .addCase(updateCategory.fulfilled, (state, action) => {
+        const index = state.list.findIndex(
+          (category) => category._id === action.payload._id
+        );
+        if (index !== -1) {
+          state.list[index] = action.payload;
+        }
+        state.status = "succeeded";
+      })
       .addCase(postCategory.fulfilled, (state, action) => {
-        state.status="succeeded"
+        state.status = "succeeded";
       });
   },
 });
