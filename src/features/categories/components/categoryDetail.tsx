@@ -27,8 +27,11 @@ const CategoryDetail: React.FC<CategoryDetailProps> = (props) => {
     <>
       {category && (
         <Descriptions
+          labelStyle={{ width: "200px" }}
+          size="middle"
+          style={{ marginTop: "20px" }}
           bordered
-          column={2}
+          column={1}
           items={exportToCategoryItem(category!)}
         />
       )}

@@ -17,6 +17,7 @@ import {
   deleteCategory,
   fetchCategories,
   fetchCategory,
+  updateCategory
 } from "./categorySlice";
 import {
   SearchOutlined,
@@ -27,20 +28,31 @@ import {
 } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import Card from "antd/es/card/Card";
-import ModalEdit from "../../components/Modal";
+import CustomModal from "../../components/Modal";
 import CategoryDetail from "./components/categoryDetail";
+import FormComponent from "./components/formComponent";
 const List: React.FC = () => {
   const dispatch = UserAppDispatch();
   const navigate = useNavigate();
 
   const categories = useAppSelector((state) => state.category.list);
   const category = useAppSelector((state) => state.category.selected);
-
+  const [open, setOpen] = useState({
+    open: false,
+    content: "",
+  });
   const [openDetail, setopenDetail] = useState(false);
   const [content, setContent] = useState<React.ReactNode | null>(null);
 
   useEffect(() => {
-    setContent(<CategoryDetail category={category}/>);
+    category &&
+      setContent(
+        open.content === "details" ? (
+          <CategoryDetail category={category} />
+        ) : (
+          <FormComponent onFinish={onFinish} initialValues={category} />
+        )
+      );
   }, [category]);
   const OnDetailsHandle = (e: boolean, id?: string) => {
     if (id) {
@@ -58,6 +70,20 @@ const List: React.FC = () => {
     },
     [dispatch]
   );
+
+  const onEditHandle = (e: boolean, id?: string) => {
+    if (id) {
+      dispatch(fetchCategory(id));
+    }
+    setOpen({
+      open: e,
+      content: "edit",
+    });
+  };
+  const onFinish = (values: any) => {
+    dispatch(updateCategory(values));
+    navigate("/categories");
+  };
   const onNavigate = () => {
     navigate("/create_category");
   };
@@ -89,7 +115,7 @@ const List: React.FC = () => {
                 <div>
                   <Menu>
                     <Menu.Item
-                      onClick={() => OnDetailsHandle(true, id)}
+                     onClick={() => onEditHandle(true, id)}
                       icon={<EditOutlined />}
                     >
                       Edit
@@ -175,10 +201,10 @@ const List: React.FC = () => {
           </Col>
         </Row>
       </Card>
-      <ModalEdit
+      <CustomModal
         title="Category Details"
         width={500}
-        open={openDetail}
+        open={open.open}
         onOpenHandler={OnDetailsHandle}
         content={<div>{content}</div>}
       />
