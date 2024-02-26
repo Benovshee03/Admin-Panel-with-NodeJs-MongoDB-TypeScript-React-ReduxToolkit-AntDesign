@@ -32,17 +32,21 @@ import CustomModal from "../../components/Modal";
 import CategoryDetail from "./components/categoryDetail";
 import FormComponent from "./components/formComponent";
 const List: React.FC = () => {
-  const dispatch = UserAppDispatch();
-  const navigate = useNavigate();
-
-  const categories = useAppSelector((state) => state.category.list);
-  const category = useAppSelector((state) => state.category.selected);
   const [open, setOpen] = useState({
     open: false,
     content: "",
   });
-  const [openDetail, setopenDetail] = useState(false);
   const [content, setContent] = useState<React.ReactNode | null>(null);
+
+  const dispatch = UserAppDispatch();
+  const categories = useAppSelector((state) => state.category.list);
+  const category = useAppSelector((state) => state.category.selected);
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    dispatch(fetchCategories());
+  }, [dispatch]);
 
   useEffect(() => {
     category &&
@@ -54,16 +58,20 @@ const List: React.FC = () => {
         )
       );
   }, [category]);
-  const OnDetailsHandle = (e: boolean, id?: string) => {
-    if (id) {
-      dispatch(fetchCategory(id!));
-      setContent(category?.categoryName);
-    }
-    setopenDetail(e);
-  };
-  useEffect(() => {
-    dispatch(fetchCategories());
-  }, [dispatch]);
+
+  const onDetailsHandle = useCallback(
+    (e: boolean, id?: string) => {
+      setOpen({
+        open: e,
+        content: "details",
+      });
+      if (id) {
+        dispatch(fetchCategory(id));
+      }
+    },
+    [dispatch]
+  );
+
   const onDeleteHandle = useCallback(
     (e: any) => {
       dispatch(deleteCategory(e));
@@ -121,7 +129,7 @@ const List: React.FC = () => {
                       Edit
                     </Menu.Item>
                     <Menu.Item
-                      onClick={() => OnDetailsHandle(true, id)}
+                      onClick={() => onDetailsHandle(true, id)}
                       icon={<SearchOutlined />}
                     >
                       Details
@@ -192,8 +200,8 @@ const List: React.FC = () => {
             <Table
               size="middle"
               locale={{
-                emptyText: "Data Yok :(",
-                filterSearchPlaceholder: "Ara",
+                emptyText: "Data Yoxdur :(",
+                filterSearchPlaceholder: "Boshluq",
               }}
               columns={columns}
               dataSource={categories}
@@ -205,7 +213,7 @@ const List: React.FC = () => {
         title="Category Details"
         width={500}
         open={open.open}
-        onOpenHandler={OnDetailsHandle}
+        onOpenHandler={onDetailsHandle}
         content={<div>{content}</div>}
       />
     </>
