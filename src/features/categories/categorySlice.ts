@@ -45,8 +45,8 @@ export const fetchCategory = createAsyncThunk<
 
 export const updateCategory = createAsyncThunk(
   "categories/updateCategory",
-  async ({ id, category }: { id: string; category: Category }) => {
-    const response = await http.patch(`/categories/${id}`, category);
+  async (category: Category ) => {
+    const response = await http.patch(`/categories/${category._id}`, category);
     return response.data;
   }
 );

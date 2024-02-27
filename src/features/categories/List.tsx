@@ -17,7 +17,7 @@ import {
   deleteCategory,
   fetchCategories,
   fetchCategory,
-  updateCategory
+  updateCategory,
 } from "./categorySlice";
 import {
   SearchOutlined,
@@ -31,12 +31,12 @@ import Card from "antd/es/card/Card";
 import CustomModal from "../../components/Modal";
 import CategoryDetail from "./components/categoryDetail";
 import FormComponent from "./components/formComponent";
+
 const List: React.FC = () => {
   const [open, setOpen] = useState({
     open: false,
     content: "",
   });
-  const [content, setContent] = useState<React.ReactNode | null>(null);
 
   const dispatch = UserAppDispatch();
   const categories = useAppSelector((state) => state.category.list);
@@ -48,23 +48,13 @@ const List: React.FC = () => {
     dispatch(fetchCategories());
   }, [dispatch]);
 
-  useEffect(() => {
-    category &&
-      setContent(
-        open.content === "details" ? (
-          <CategoryDetail category={category} />
-        ) : (
-          <FormComponent onFinish={onFinish} initialValues={category} />
-        )
-      );
-  }, [category]);
-
   const onDetailsHandle = useCallback(
     (e: boolean, id?: string) => {
       setOpen({
         open: e,
         content: "details",
       });
+
       if (id) {
         dispatch(fetchCategory(id));
       }
@@ -79,41 +69,42 @@ const List: React.FC = () => {
     [dispatch]
   );
 
-  const onEditHandle = (e: boolean, id?: string) => {
-    if (id) {
-      dispatch(fetchCategory(id));
-    }
-    setOpen({
-      open: e,
-      content: "edit",
-    });
-  };
+  const onEditHandle = useCallback(
+    (e: boolean, id?: string) => {
+      if (id) {
+        dispatch(fetchCategory(id));
+      }
+      setOpen({
+        open: e,
+        content: "edit",
+      });
+    },
+    [dispatch]
+  );
+
   const onFinish = (values: any) => {
     dispatch(updateCategory(values));
-    navigate("/categories");
+    setOpen({ open: false, content: "" });
   };
-  const onNavigate = () => {
-    navigate("/create_category");
-  };
+
+  const onNavigate = () => navigate("/category/create");
 
   type ColumnType = TableProps<CategoryType>["columns"] | any;
-
-  // useMemo kullanicaz
   const columns: ColumnType = useMemo(
     () => [
       {
         title: "Category Name",
         dataIndex: "categoryName",
-        key: "categoryName",
+        key: `categoryName`,
       },
       {
         title: "Description",
         dataIndex: "description",
-        key: "description",
+        key: `description`,
       },
       {
         title: "Actions",
-        key: "actions",
+        key: `actions`,
         dataIndex: "_id",
         render: (id: any) => {
           return (
@@ -123,18 +114,21 @@ const List: React.FC = () => {
                 <div>
                   <Menu>
                     <Menu.Item
-                     onClick={() => onEditHandle(true, id)}
+                      key={"edit"}
+                      onClick={() => onEditHandle(true, id)}
                       icon={<EditOutlined />}
                     >
                       Edit
                     </Menu.Item>
                     <Menu.Item
+                      key={"details"}
                       onClick={() => onDetailsHandle(true, id)}
                       icon={<SearchOutlined />}
                     >
                       Details
                     </Menu.Item>
                     <Menu.Item
+                      key={"delete"}
                       onClick={() => onDeleteHandle(id)}
                       icon={<DeleteOutlined />}
                       danger
@@ -171,9 +165,7 @@ const List: React.FC = () => {
               status="403"
               title="403"
               subTitle="Sorry, you are not authorized to access this page."
-              extra={
-                <Button type="primary">Please, open in web browser</Button>
-              }
+              extra={<Button type="primary">Pervin Nerdesin?</Button>}
             />
           </Col>
           <Col
@@ -200,8 +192,8 @@ const List: React.FC = () => {
             <Table
               size="middle"
               locale={{
-                emptyText: "Data Yoxdur :(",
-                filterSearchPlaceholder: "Boshluq",
+                emptyText: "Data Yok :(",
+                filterSearchPlaceholder: "Ara",
               }}
               columns={columns}
               dataSource={categories}
@@ -209,13 +201,26 @@ const List: React.FC = () => {
           </Col>
         </Row>
       </Card>
-      <CustomModal
-        title="Category Details"
-        width={500}
-        open={open.open}
-        onOpenHandler={onDetailsHandle}
-        content={<div>{content}</div>}
-      />
+
+      {open.content === "details" ? (
+        <CustomModal
+          title={`Category Details`}
+          width={1200}
+          open={open.open}
+          onOpenHandler={onDetailsHandle}
+          content={<CategoryDetail category={category} />}
+        />
+      ) : (
+        <CustomModal
+          title={`Category Edit`}
+          width={700}
+          open={open.open}
+          onOpenHandler={onEditHandle}
+          content={
+            <FormComponent onFinish={onFinish} initialValues={category} />
+          }
+        />
+      )}
     </>
   );
 };
