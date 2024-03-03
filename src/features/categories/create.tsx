@@ -13,7 +13,7 @@ const Create: React.FC = () => {
   const dispatch = UserAppDispatch();
   const navigate = useNavigate()
   const onFinish = (values: any) => {
-    navigate('/categories')
+    navigate('/api/categories')
     dispatch(postCategory(values));
     console.log(values);
   };

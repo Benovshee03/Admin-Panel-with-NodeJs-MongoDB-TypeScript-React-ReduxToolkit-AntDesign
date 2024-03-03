@@ -6,8 +6,7 @@ const { Content } = Layout;
 const AppLayout = ({content}:{content:React.ReactNode}) => {
   const [collapsed, setCollapsed] = useState(false);
 
-  const {
-    token: { colorBgContainer, borderRadiusLG },
+  const {token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
 
   const onCollapse = (collapsed: boolean) => {

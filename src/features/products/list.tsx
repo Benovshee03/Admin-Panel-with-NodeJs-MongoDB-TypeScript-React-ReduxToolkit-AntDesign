@@ -11,14 +11,14 @@ import {
   Space,
   Menu,
 } from "antd";
-import { CategoryType } from "./types";
+import { Product, ProductType } from "./types";
 import { UserAppDispatch, useAppSelector } from "../../app/hooks";
 import {
-  deleteCategory,
-  fetchCategories,
-  fetchCategory,
-  updateCategory,
-} from "./categorySlice";
+  deleteProduct,
+  fetchProducts,
+  fetchProduct,
+  updateProduct,
+} from "./productSlice";
 import {
   SearchOutlined,
   PlusOutlined,
@@ -29,7 +29,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import Card from "antd/es/card/Card";
 import CustomModal from "../../components/Modal";
-import CategoryDetail from "./components/categoryDetail";
+import ProductDetail from "./components/productDetail";
 import FormComponent from "./components/formComponent";
 
 const List: React.FC = () => {
@@ -38,14 +38,15 @@ const List: React.FC = () => {
     content: "",
   });
 
+
   const dispatch = UserAppDispatch();
-  const categories = useAppSelector((state) => state.category.list);
-  const category = useAppSelector((state) => state.category.selected);
+  const products = useAppSelector((state) => state.product.list);
+  const product = useAppSelector((state) => state.product.selected);
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    dispatch(fetchCategories());
+    dispatch(fetchProducts());
   }, [dispatch]);
 
   const onDetailsHandle = useCallback(
@@ -54,9 +55,8 @@ const List: React.FC = () => {
         open: e,
         content: "details",
       });
-
       if (id) {
-        dispatch(fetchCategory(id));
+        dispatch(fetchProduct(id));
       }
     },
     [dispatch]
@@ -64,15 +64,15 @@ const List: React.FC = () => {
 
   const onDeleteHandle = useCallback(
     (e: any) => {
-      dispatch(deleteCategory(e));
+      dispatch(deleteProduct(e));
     },
     [dispatch]
   );
-
+  
   const onEditHandle = useCallback(
     (e: boolean, id?: string) => {
       if (id) {
-        dispatch(fetchCategory(id));
+        dispatch(fetchProduct(id));
       }
       setOpen({
         open: e,
@@ -83,24 +83,39 @@ const List: React.FC = () => {
   );
 
   const onFinish = (values: any) => {
-    dispatch(updateCategory(values));
+    dispatch(updateProduct(values));
     setOpen({ open: false, content: "" });
   };
 
-  const onNavigate = () => navigate("/api/create_category");
+  const onNavigate = () => navigate("/api/product/create");
 
-  type ColumnType = TableProps<CategoryType>["columns"] | any;
+  type ColumnType = TableProps<ProductType>["columns"] | any;
   const columns: ColumnType = useMemo(
     () => [
       {
-        title: "Category Name",
-        dataIndex: "categoryName",
-        key: `categoryName`,
+        title: "Product Name",
+        dataIndex: "productName",
+        key: `productName`,
       },
       {
         title: "Description",
         dataIndex: "description",
         key: `description`,
+      },
+      {
+        title: "Unit Price",
+        dataIndex: "unitPrice",
+        key: `unitPrice`,
+      },
+      {
+        title: "Unit in Stock",
+        dataIndex: "unitsInStock",
+        key: `unitsInStock`,
+      },
+      {
+        title: "Category Name",
+        dataIndex: "categoryId",
+        key: `categoryId`,
       },
       {
         title: "Actions",
@@ -114,21 +129,21 @@ const List: React.FC = () => {
                 <div>
                   <Menu>
                     <Menu.Item
-                      key={"edit"}
+                      key={`edit_${id}`}
                       onClick={() => onEditHandle(true, id)}
                       icon={<EditOutlined />}
                     >
                       Edit
                     </Menu.Item>
                     <Menu.Item
-                      key={"details"}
+                      key={`details_${id}`}
                       onClick={() => onDetailsHandle(true, id)}
                       icon={<SearchOutlined />}
                     >
                       Details
                     </Menu.Item>
                     <Menu.Item
-                      key={"delete"}
+                      key={`delete_${id}`}
                       onClick={() => onDeleteHandle(id)}
                       icon={<DeleteOutlined />}
                       danger
@@ -184,7 +199,7 @@ const List: React.FC = () => {
                 type="primary"
                 icon={<PlusOutlined />}
               >
-                Yeni Kategori
+                New Product
               </Button>
             </Tooltip>
           </Col>
@@ -196,7 +211,7 @@ const List: React.FC = () => {
                 filterSearchPlaceholder: "Ara",
               }}
               columns={columns}
-              dataSource={categories}
+              dataSource={products}
             />
           </Col>
         </Row>
@@ -204,20 +219,20 @@ const List: React.FC = () => {
 
       {open.content === "details" ? (
         <CustomModal
-          title={`Category Details`}
+          title={`Product Details`}
           width={1200}
           open={open.open}
           onOpenHandler={onDetailsHandle}
-          content={<CategoryDetail category={category} />}
+          content={<ProductDetail product={product} />}
         />
       ) : (
         <CustomModal
-          title={`Category Edit`}
+          title={`Product Edit`}
           width={700}
           open={open.open}
           onOpenHandler={onEditHandle}
           content={
-            <FormComponent onFinish={onFinish} initialValues={category} />
+            <FormComponent onFinish={onFinish} initialValues={product} />
           }
         />
       )}
