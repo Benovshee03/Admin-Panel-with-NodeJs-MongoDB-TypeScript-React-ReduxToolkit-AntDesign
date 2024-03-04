@@ -108,7 +108,7 @@ const List: React.FC = () => {
         dataIndex: "_id",
         render: (id: any) => {
           return (
-            <Dropdown
+            <Dropdown 
               trigger={["click"]}
               dropdownRender={(menu) => (
                 <div>
@@ -197,6 +197,8 @@ const List: React.FC = () => {
               }}
               columns={columns}
               dataSource={categories}
+              pagination={{ pageSize: 7 }} 
+
             />
           </Col>
         </Row>

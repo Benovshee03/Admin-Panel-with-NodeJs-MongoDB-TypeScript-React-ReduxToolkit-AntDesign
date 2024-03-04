@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import {Layout, theme } from "antd";
+import {Button, Layout, theme } from "antd";
 import Sider from "../SiderMenu";
 import Header from "../Header"
 const { Content } = Layout;
@@ -14,7 +14,8 @@ const AppLayout = ({content}:{content:React.ReactNode}) => {
   };
 
   return (
-    <Layout style={{ height: "100vh" }}>
+    <Layout >
+      
       <Sider collapsed={collapsed} onCollapse={onCollapse} />
       <Layout>
         <Header
@@ -22,6 +23,7 @@ const AppLayout = ({content}:{content:React.ReactNode}) => {
           onCollapse={onCollapse}
           colorBgContainer={colorBgContainer}
         />
+        
         <Content
           style={{
             margin: "24px 16px",
@@ -30,6 +32,7 @@ const AppLayout = ({content}:{content:React.ReactNode}) => {
             borderRadius: borderRadiusLG,
           }}
         >
+
           {content}
         </Content>
       </Layout>

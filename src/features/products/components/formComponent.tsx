@@ -3,7 +3,6 @@ import { Button, Form, Input, InputNumber, Select } from "antd";
 import { UserAppDispatch, useAppSelector } from "../../../app/hooks";
 import { fetchCategories } from "../../categories/categorySlice";
 import { useNavigate } from "react-router-dom";
-import Category from "../../../network/models/Category";
 
 const layout = {
   labelCol: { span: 5 },
@@ -68,7 +67,7 @@ const FormComponent: React.FC<FormComponentProps> = (props) => {
         >
           <InputNumber />
         </Form.Item>
-        <Form.Item name={"description"} label="Açıklama">
+        <Form.Item name={"description"} label="description">
           <Input.TextArea />
         </Form.Item>
         <Form.Item
@@ -87,7 +86,7 @@ const FormComponent: React.FC<FormComponentProps> = (props) => {
         </Form.Item>
         <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
           <Button type="primary" htmlType="submit" style={{ float: "right" }}>
-            Kaydet
+            Submit
           </Button>
         </Form.Item>
       </Form>

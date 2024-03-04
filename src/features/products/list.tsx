@@ -31,7 +31,7 @@ import Card from "antd/es/card/Card";
 import CustomModal from "../../components/Modal";
 import ProductDetail from "./components/productDetail";
 import FormComponent from "./components/formComponent";
-import Product from "../../network/models/Product";
+import { log } from "console";
 
 const List: React.FC = () => {
   const [open, setOpen] = useState({
@@ -43,7 +43,10 @@ const List: React.FC = () => {
   const dispatch = UserAppDispatch();
   const products = useAppSelector((state) => state.product.list);
   const product = useAppSelector((state) => state.product.selected);
-
+  const category = useAppSelector((state)=>state.category.list)
+  category.map((e)=>{console.log(e.categoryName);
+  })
+  
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -117,6 +120,10 @@ const List: React.FC = () => {
         title: "Category Name",
         dataIndex: "categoryId",
         key: `categoryId`,
+        render:(categoryId:string)=>{
+          const categoryName = category.find(cat => cat._id === categoryId)?.categoryName || "";
+          return categoryName;
+        }
       },
       {
         title: "Actions",
@@ -208,11 +215,12 @@ const List: React.FC = () => {
             <Table
               size="middle"
               locale={{
-                emptyText: "Data Yok :(",
-                filterSearchPlaceholder: "Ara",
+                emptyText: "Data Yoxdur",
+                filterSearchPlaceholder: "Boshluq",
               }}
               columns={columns}
               dataSource={products}
+              pagination={{ pageSize: 7 }} 
             />
           </Col>
         </Row>
