@@ -1,11 +1,7 @@
-export interface Category {
-  _id?: string;
-  categoryName?: string;
-  description: string;
-}
+import Category from "../../network/models/Category";
 
 export interface CategoryState {
-  list: Category[] | [];
+  list: Category[] | any[];
   status: "idle" | "loading" | "succeeded" | "failed";
   error: string | null;
   selected: Category | null;

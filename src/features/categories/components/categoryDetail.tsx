@@ -1,8 +1,7 @@
 import React from "react";
 import { Descriptions } from "antd";
 import type { DescriptionsProps } from "antd";
-import { Category } from "../types";
-
+import Category from "../../../network/models/Category";
 interface CategoryDetailProps {
   category: Category | null;
 }

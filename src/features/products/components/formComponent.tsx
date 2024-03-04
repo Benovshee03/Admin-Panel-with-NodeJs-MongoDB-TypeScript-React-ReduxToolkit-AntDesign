@@ -3,7 +3,7 @@ import { Button, Form, Input, InputNumber, Select } from "antd";
 import { UserAppDispatch, useAppSelector } from "../../../app/hooks";
 import { fetchCategories } from "../../categories/categorySlice";
 import { useNavigate } from "react-router-dom";
-import { Category } from "../../categories/types";
+import Category from "../../../network/models/Category";
 
 const layout = {
   labelCol: { span: 5 },

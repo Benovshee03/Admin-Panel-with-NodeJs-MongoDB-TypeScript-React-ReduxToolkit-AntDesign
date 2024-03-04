@@ -1,22 +1,20 @@
 import React from "react";
-import {Card,Col,Row } from "antd";
-import { UserAppDispatch, useAppSelector } from "../../app/hooks";
-import { postCategory } from "./categorySlice";
+import { Card, Col, Row } from "antd";
+import { UserAppDispatch } from "../../app/hooks";
+import { addCategory } from "./categorySlice";
 import { useNavigate } from "react-router-dom";
 import FormComponent from "./components/formComponent";
 
-
-/* eslint-disable no-template-curly-in-string */
-
-
 const Create: React.FC = () => {
+  const navigate = useNavigate();
+
   const dispatch = UserAppDispatch();
-  const navigate = useNavigate()
+
   const onFinish = (values: any) => {
-    navigate('/api/categories')
-    dispatch(postCategory(values));
-    console.log(values);
+    dispatch(addCategory(values));
+    navigate("/category/index");
   };
+
   return (
     <Card>
       <Row style={{ marginTop: 16 }}>
@@ -24,7 +22,8 @@ const Create: React.FC = () => {
           <FormComponent onFinish={onFinish} />
         </Col>
       </Row>
-    </Card>)
+    </Card>
+  );
 };
 
 export default Create;
