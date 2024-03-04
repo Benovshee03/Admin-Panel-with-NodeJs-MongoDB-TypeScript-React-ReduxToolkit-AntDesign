@@ -1,8 +1,7 @@
 import React from "react";
 import { Descriptions } from "antd";
 import type { DescriptionsProps } from "antd";
-import { Product } from "../types";
-
+import Product from "../../../network/models/Product";
 interface ProductDetailProps {
   product: Product | null;
 }

@@ -1,13 +1,6 @@
 import React from "react";
 
-export interface Product {
-  _id?: string;
-  productName: string;
-  description?: string;
-  unitPrice:number;
-  unitsInStock: number;
-  categoryId: string;
-}
+import Product from "../../network/models/Product";
 
 export interface ProductState {
   list: Product[] | any[];

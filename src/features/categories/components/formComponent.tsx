@@ -35,12 +35,12 @@ const FormComponent: React.FC<FormComponentProps> = (props) => {
 
         <Form.Item
           name={"categoryName"}
-          label="Kategori Adı"
+          label="Category Name"
           rules={[{ required: true }]}
         >
           <Input />
         </Form.Item>
-        <Form.Item name={"description"} label="Açıklama">
+        <Form.Item name={"description"} label="Description">
           <Input.TextArea />
         </Form.Item>
         <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>

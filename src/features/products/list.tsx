@@ -11,7 +11,7 @@ import {
   Space,
   Menu,
 } from "antd";
-import { Product, ProductType } from "./types";
+import {  ProductType } from "./types";
 import { UserAppDispatch, useAppSelector } from "../../app/hooks";
 import {
   deleteProduct,
@@ -31,7 +31,7 @@ import Card from "antd/es/card/Card";
 import CustomModal from "../../components/Modal";
 import ProductDetail from "./components/productDetail";
 import FormComponent from "./components/formComponent";
-
+import Product from "../../network/models/Product";
 
 const List: React.FC = () => {
   const [open, setOpen] = useState({
