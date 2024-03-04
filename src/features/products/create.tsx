@@ -13,7 +13,7 @@ const Create:React.FC = () => {
   const onFinish = (values: any) => {
     dispatch(addProduct(values));
     console.log(values)
-    navigate("api/products");
+    navigate("/api/products");
   };
 
   return (

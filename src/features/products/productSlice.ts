@@ -21,7 +21,7 @@ export const addProduct = createAsyncThunk(
 export const fetchProducts = createAsyncThunk(
   "products/fetchProducts",
   async () => {
-    const response = await http.get("/product");
+    const response = await http.get("/products");
     return response.data;
   }
 );
@@ -29,7 +29,7 @@ export const fetchProducts = createAsyncThunk(
 export const deleteProduct = createAsyncThunk(
   "products/deleteProduct",
   async (id: string) => {
-    const response = await http.delete(`/product/${id}`);
+    const response = await http.delete(`/products/${id}`);
     return response.data;
   }
 );

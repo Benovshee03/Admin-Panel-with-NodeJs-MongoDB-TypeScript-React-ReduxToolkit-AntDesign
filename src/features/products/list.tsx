@@ -217,7 +217,6 @@ const List: React.FC = () => {
           </Col>
         </Row>
       </Card>
-
       {open.content === "details" ? (
         <CustomModal
           title={`Product Details`}

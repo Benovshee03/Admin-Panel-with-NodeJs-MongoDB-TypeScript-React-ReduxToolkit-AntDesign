@@ -11,7 +11,7 @@ export default function Router() {
         <Route path='/' element={<AppLayout content={<Content/>}/>}/>
         <Route path='/api/categories' element={<AppLayout content={<CategoryList/>}/>} />
         <Route path='/api/create_category' element={<AppLayout content={<CreateCategory/>}/>} />
-        <Route path="/api/products/index" element={<AppLayout content={<ProductList />} />}/>
+        <Route path="/api/products" element={<AppLayout content={<ProductList />} />}/>
         <Route path="/api/products/create" element={<AppLayout content={<CreateProduct />} />}/>
 
     </Routes>
