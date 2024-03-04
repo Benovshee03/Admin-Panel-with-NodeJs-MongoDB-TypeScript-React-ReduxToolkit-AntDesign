@@ -32,6 +32,7 @@ import CustomModal from "../../components/Modal";
 import ProductDetail from "./components/productDetail";
 import FormComponent from "./components/formComponent";
 
+
 const List: React.FC = () => {
   const [open, setOpen] = useState({
     open: false,
@@ -87,7 +88,7 @@ const List: React.FC = () => {
     setOpen({ open: false, content: "" });
   };
 
-  const onNavigate = () => navigate("/api/product/create");
+  const onNavigate = () => navigate("/api/products/create");
 
   type ColumnType = TableProps<ProductType>["columns"] | any;
   const columns: ColumnType = useMemo(

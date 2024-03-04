@@ -11,15 +11,15 @@ const initialState: ProductState = {
 };
 
 export const addProduct = createAsyncThunk(
-  "product/addProduct",
+  "products/create",
   async (product: Product) => {
-    const response = await http.post("/product", product);
+    const response = await http.post("/products", product);
     return response.data;
   }
 );
 
 export const fetchProducts = createAsyncThunk(
-  "product/fetchProducts",
+  "products/fetchProducts",
   async () => {
     const response = await http.get("/product");
     return response.data;
@@ -27,7 +27,7 @@ export const fetchProducts = createAsyncThunk(
 );
 
 export const deleteProduct = createAsyncThunk(
-  "product/deleteProduct",
+  "products/deleteProduct",
   async (id: string) => {
     const response = await http.delete(`/product/${id}`);
     return response.data;
@@ -41,7 +41,7 @@ export const fetchProduct = createAsyncThunk<
     rejectValue: string;
     state: RootState;
   }
->("product/fetchProduct", async (id, { rejectWithValue }) => {
+>("products/fetchProduct", async (id, { rejectWithValue }) => {
   try {
     const response = await http.get(`/products/${id}`);
     return response.data;
@@ -51,7 +51,7 @@ export const fetchProduct = createAsyncThunk<
 });
 
 export const updateProduct = createAsyncThunk(
-  "product/updateProduct",
+  "products/updateProduct",
   async (product: Product) => {
     const response = await http.patch(`/products/${product._id}`, product);
     return response.data;
