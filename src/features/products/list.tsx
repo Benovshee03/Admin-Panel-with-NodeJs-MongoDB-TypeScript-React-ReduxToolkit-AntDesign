@@ -1,24 +1,19 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo } from "react";
+import { UserAppDispatch, useAppSelector } from "../../app/hooks";
 import {
+  Card,
   Row,
-  Table,
   Col,
   Result,
   Button,
   Tooltip,
-  TableProps,
+  Table,
   Dropdown,
-  Space,
   Menu,
+  Popconfirm,
+  Space,
+  TableProps,
 } from "antd";
-import {  ProductType } from "./types";
-import { UserAppDispatch, useAppSelector } from "../../app/hooks";
-import {
-  deleteProduct,
-  fetchProducts,
-  fetchProduct,
-  updateProduct,
-} from "./productSlice";
 import {
   SearchOutlined,
   PlusOutlined,
@@ -26,72 +21,28 @@ import {
   EditOutlined,
   DeleteOutlined,
 } from "@ant-design/icons";
-import { useNavigate } from "react-router-dom";
-import Card from "antd/es/card/Card";
-import CustomModal from "../../components/Modal";
-import ProductDetail from "./components/productDetail";
-import FormComponent from "./components/formComponent";
-import { log } from "console";
+import { useNavigate, useParams } from "react-router-dom";
+import { fetchProducts } from "./productSlice";
+import { ProductType } from "./types";
+import moment from "moment";
 
-const List: React.FC = () => {
-  const [open, setOpen] = useState({
-    open: false,
-    content: "",
-  });
-
-
+export default function List() {
   const dispatch = UserAppDispatch();
   const products = useAppSelector((state) => state.product.list);
-  const product = useAppSelector((state) => state.product.selected);
-  const category = useAppSelector((state)=>state.category.list)
-  category.map((e)=>{console.log(e.categoryName);
-  })
-  
+  // const product = useAppSelector((state) => state.product.selected);
   const navigate = useNavigate();
 
+  const { categoryId } = useParams();
+
   useEffect(() => {
-    dispatch(fetchProducts());
+    if (categoryId === undefined) return;
+    dispatch(fetchProducts(categoryId));
   }, [dispatch]);
 
-  const onDetailsHandle = useCallback(
-    (e: boolean, id?: string) => {
-      setOpen({
-        open: e,
-        content: "details",
-      });
-      if (id) {
-        dispatch(fetchProduct(id));
-      }
-    },
-    [dispatch]
-  );
-
-  const onDeleteHandle = useCallback(
-    (e: any) => {
-      dispatch(deleteProduct(e));
-    },
-    [dispatch]
-  );
-  
-  const onEditHandle = useCallback(
-    (e: boolean, id?: string) => {
-      if (id) {
-        dispatch(fetchProduct(id));
-      }
-      setOpen({
-        open: e,
-        content: "edit",
-      });
-    },
-    [dispatch]
-  );
-
-  const onFinish = (values: any) => {
-    dispatch(updateProduct(values));
-    setOpen({ open: false, content: "" });
-  };
-
-  const onNavigate = () => navigate("/api/products/create");
+  const onNavigate = () => navigate("/product/create");
+  const onDetailsHandle = useCallback((e: boolean, id?: string) => {}, []);
+  const onEditHandle = useCallback((e: boolean, id?: string) => {}, []);
+  const onDeleteHandle = useCallback((e: boolean, id?: string) => {}, []);
 
   type ColumnType = TableProps<ProductType>["columns"] | any;
   const columns: ColumnType = useMemo(
@@ -112,24 +63,28 @@ const List: React.FC = () => {
         key: `unitPrice`,
       },
       {
-        title: "Unit in Stock",
+        title: "Units In Stock",
         dataIndex: "unitsInStock",
         key: `unitsInStock`,
       },
       {
-        title: "Category Name",
-        dataIndex: "categoryId",
-        key: `categoryId`,
-        render:(categoryId:string)=>{
-          const categoryName = category.find(cat => cat._id === categoryId)?.categoryName || "";
-          return categoryName;
-        }
+        title: "Category",
+        dataIndex: "categoryName",
+        key: `categoryName`,
+      },
+      {
+        title: "Created Date",
+        dataIndex: "createdDate",
+        key: `createdDate`,
+        render: (_: any) => {
+          return <> {moment(_).format("YYYY-MM-DD HH:mm:ss")} </>;
+        },
       },
       {
         title: "Actions",
         key: `actions`,
         dataIndex: "_id",
-        render: (id: any) => {
+        render: (_: any) => {
           return (
             <Dropdown
               trigger={["click"]}
@@ -137,26 +92,33 @@ const List: React.FC = () => {
                 <div>
                   <Menu>
                     <Menu.Item
-                      key={`edit_${id}`}
-                      onClick={() => onEditHandle(true, id)}
+                      key={`edit_${_}`}
+                      onClick={() => onEditHandle(true, _)}
                       icon={<EditOutlined />}
                     >
                       Edit
                     </Menu.Item>
                     <Menu.Item
-                      key={`details_${id}`}
-                      onClick={() => onDetailsHandle(true, id)}
+                      key={`details_${_}`}
+                      onClick={() => onDetailsHandle(true, _)}
                       icon={<SearchOutlined />}
                     >
                       Details
                     </Menu.Item>
                     <Menu.Item
-                      key={`delete_${id}`}
-                      onClick={() => onDeleteHandle(id)}
+                      key={`delete_${_}`}
                       icon={<DeleteOutlined />}
                       danger
                     >
-                      Delete
+                      <Popconfirm
+                        title="Delete the task"
+                        description="Are you sure to delete this task?"
+                        okText="Yes"
+                        cancelText="No"
+                        onConfirm={() => onDeleteHandle(_)}
+                      >
+                        Delete
+                      </Popconfirm>
                     </Menu.Item>
                   </Menu>
                 </div>
@@ -174,7 +136,6 @@ const List: React.FC = () => {
     ],
     []
   );
-
   return (
     <>
       <Card>
@@ -188,7 +149,7 @@ const List: React.FC = () => {
               status="403"
               title="403"
               subTitle="Sorry, you are not authorized to access this page."
-              extra={<Button type="primary">Open in web browser</Button>}
+              extra={<Button type="primary">Pervin Nerdesin?</Button>}
             />
           </Col>
           <Col
@@ -207,7 +168,7 @@ const List: React.FC = () => {
                 type="primary"
                 icon={<PlusOutlined />}
               >
-                New Product
+                Yeni Kategori
               </Button>
             </Tooltip>
           </Col>
@@ -215,37 +176,15 @@ const List: React.FC = () => {
             <Table
               size="middle"
               locale={{
-                emptyText: "Data Yoxdur",
-                filterSearchPlaceholder: "Boshluq",
+                emptyText: "Data Yok :(",
+                filterSearchPlaceholder: "Ara",
               }}
               columns={columns}
               dataSource={products}
-              pagination={{ pageSize: 7 }} 
             />
           </Col>
         </Row>
       </Card>
-      {open.content === "details" ? (
-        <CustomModal
-          title={`Product Details`}
-          width={1200}
-          open={open.open}
-          onOpenHandler={onDetailsHandle}
-          content={<ProductDetail product={product} />}
-        />
-      ) : (
-        <CustomModal
-          title={`Product Edit`}
-          width={700}
-          open={open.open}
-          onOpenHandler={onEditHandle}
-          content={
-            <FormComponent onFinish={onFinish} initialValues={product} />
-          }
-        />
-      )}
     </>
   );
-};
-
-export default List;
+}

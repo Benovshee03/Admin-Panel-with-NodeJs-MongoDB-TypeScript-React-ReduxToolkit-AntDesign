@@ -12,7 +12,7 @@ const Create: React.FC = () => {
 
   const onFinish = (values: any) => {
     dispatch(addCategory(values));
-    navigate("/api/categories");
+    navigate("/categories");
   };
 
   return (

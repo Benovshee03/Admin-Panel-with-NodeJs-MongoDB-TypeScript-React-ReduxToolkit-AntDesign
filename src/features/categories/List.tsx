@@ -10,6 +10,7 @@ import {
   Dropdown,
   Space,
   Menu,
+  Popconfirm,
 } from "antd";
 import { CategoryType } from "./types";
 import { UserAppDispatch, useAppSelector } from "../../app/hooks";
@@ -25,6 +26,7 @@ import {
   SettingOutlined,
   EditOutlined,
   DeleteOutlined,
+  UnorderedListOutlined,
 } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import Card from "antd/es/card/Card";
@@ -54,7 +56,6 @@ const List: React.FC = () => {
         open: e,
         content: "details",
       });
-
       if (id) {
         dispatch(fetchCategory(id));
       }
@@ -87,7 +88,9 @@ const List: React.FC = () => {
     setOpen({ open: false, content: "" });
   };
 
-  const onNavigate = () => navigate("/api/create_category");
+  const onNavigateToCreate = () => navigate("/create_category");
+  const onNavigateToProducts = (id: string) =>
+    navigate(`/products/${id}`);
 
   type ColumnType = TableProps<CategoryType>["columns"] | any;
   const columns: ColumnType = useMemo(
@@ -103,37 +106,57 @@ const List: React.FC = () => {
         key: `description`,
       },
       {
+        title: "Created Date",
+        dataIndex: "createdDate",
+        key: `createdDate`,
+      },
+      {
         title: "Actions",
         key: `actions`,
         dataIndex: "_id",
-        render: (id: any) => {
+        render: (_: any) => {
           return (
-            <Dropdown 
+            <Dropdown
               trigger={["click"]}
               dropdownRender={(menu) => (
                 <div>
                   <Menu>
                     <Menu.Item
-                      key={"edit"}
-                      onClick={() => onEditHandle(true, id)}
+                      key={`edit_${_}`}
+                      onClick={() => onEditHandle(true, _)}
                       icon={<EditOutlined />}
                     >
                       Edit
                     </Menu.Item>
                     <Menu.Item
-                      key={"details"}
-                      onClick={() => onDetailsHandle(true, id)}
+                      key={`details_${_}`}
+                      onClick={() => onDetailsHandle(true, _)}
                       icon={<SearchOutlined />}
                     >
                       Details
                     </Menu.Item>
                     <Menu.Item
-                      key={"delete"}
-                      onClick={() => onDeleteHandle(id)}
+                      key={`products_${_}`}
+                      onClick={() => onNavigateToProducts(_)}
+                      icon={<UnorderedListOutlined />}
+                    >
+                      Products
+                    </Menu.Item>
+
+                    <Menu.Item
+                      key={`delete_${_}`}
                       icon={<DeleteOutlined />}
                       danger
                     >
-                      Delete
+                      <Popconfirm
+                        title="Delete the task"
+                        description="Are you sure to delete this task?"
+                        okText="Yes"
+                        cancelText="No"
+                        onConfirm={() => onDeleteHandle(_)}
+                      >
+                        Delete
+                      </Popconfirm>
                     </Menu.Item>
                   </Menu>
                 </div>
@@ -165,7 +188,7 @@ const List: React.FC = () => {
               status="403"
               title="403"
               subTitle="Sorry, you are not authorized to access this page."
-              extra={<Button type="primary">Open in web browser</Button>}
+              extra={<Button type="primary">Pervin Nerdesin?</Button>}
             />
           </Col>
           <Col
@@ -179,7 +202,7 @@ const List: React.FC = () => {
           >
             <Tooltip title="Create">
               <Button
-                onClick={onNavigate}
+                onClick={onNavigateToCreate}
                 style={{ float: "right" }}
                 type="primary"
                 icon={<PlusOutlined />}
@@ -197,8 +220,6 @@ const List: React.FC = () => {
               }}
               columns={columns}
               dataSource={categories}
-              pagination={{ pageSize: 7 }} 
-
             />
           </Col>
         </Row>

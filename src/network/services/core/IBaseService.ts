@@ -6,7 +6,7 @@ export interface IBaseService<T extends IBaseEntity> {
    * get all items
    */
   getAll(): Promise<Result<T[]>>;
-
+ 
   /**
    * get item by id
    * @param id
@@ -27,7 +27,7 @@ export interface IBaseService<T extends IBaseEntity> {
 
   /**
    * update item by id
-   * @param id 
+   * @param id
    * @param entity
    */
   update(id: string, entity: T): Promise<Result<T>>;

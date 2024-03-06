@@ -1,20 +1,20 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import http from "../../common/utils/api";
+import { createAsyncThunk } from "@reduxjs/toolkit";
 import { ProductState } from "./types";
-import { RootState } from "../../app/store";
-import Product from "../../network/models/Product";
 import createBaseSlice from "../../network/reducers/core/BaseSlice";
 import { ProductService } from "../../network/services/ProductService";
+import Product from "../../network/models/Product";
+
 const initialState: ProductState = {
   list: [],
   status: "idle",
   error: null,
   selected: null,
 };
-let productService = new ProductService()
+
+let productService = new ProductService();
 
 export const addProduct = createAsyncThunk(
-  "products/create",
+  "products/addproduct",
   async (product: Product) => {
     const response = await productService.add(product);
     return response.data;
@@ -23,8 +23,8 @@ export const addProduct = createAsyncThunk(
 
 export const fetchProducts = createAsyncThunk(
   "products/fetchProducts",
-  async () => {
-    const response = await productService.getAll();
+  async (categoryId: string) => {
+    const response = await productService.getProductsByCategory(categoryId);
     return response.data;
   }
 );
@@ -46,14 +46,14 @@ export const fetchProduct = createAsyncThunk(
 );
 
 export const updateProduct = createAsyncThunk(
-  "products/updateProduct",
+  "products/updateproduct",
   async (product: Product) => {
-    const response = await http.patch(`/products/${product._id}`, product);
+    const response = await productService.update(product._id, product);
     return response.data;
   }
 );
 
-const productSlice = createBaseSlice<ProductState>("products", initialState, [
+const productSlice = createBaseSlice<ProductState>("product", initialState, [
   {
     thunk: fetchProducts,
     onFulfilled: (state, action) => {
@@ -68,7 +68,7 @@ const productSlice = createBaseSlice<ProductState>("products", initialState, [
     thunk: deleteProduct,
     onFulfilled: (state, action) => {
       state.list = state.list.filter(
-        (product:Product) => product._id !== action.payload
+        (product) => product._id !== action.payload
       );
     },
   },
@@ -81,13 +81,11 @@ const productSlice = createBaseSlice<ProductState>("products", initialState, [
   {
     thunk: updateProduct,
     onFulfilled: (state, action) => {
-      state.list = state.list.map((product:Product) =>
+      state.list = state.list.map((product) =>
         product._id === action.payload._id ? action.payload : product
       );
     },
   },
 ]);
-
-
 
 export default productSlice.reducer;
