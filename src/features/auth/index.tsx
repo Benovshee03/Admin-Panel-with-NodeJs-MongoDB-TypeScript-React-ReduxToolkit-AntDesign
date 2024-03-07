@@ -1,27 +1,41 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./index.css";
 import rules from "./index.validation";
 import { LoginModel } from "./types";
 import { Form, FormInstance, Row, Col, Card, Input, Button } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
-import { decryptData, encryptData } from "../../common/utils/hasherHelper";
-import { UserAppDispatch } from "../../app/hooks";
 import { useAuth } from "../../context/AuthContext";
+import { useAppSelector } from "../../app/hooks";
+import { setStore } from "../../common/utils/localStorageHelper";
+import { useNavigate } from "react-router-dom";
+// import { decryptData, encryptData } from "../../common/utils/hasherHelper";
+// import { useAppDispatch } from "../../app/hooks";
 
 export default function Login() {
-  const {loginAuth,logoutAuth} = useAuth()
+  const { loginAuth, logoutAuth } = useAuth();
+  const navigate = useNavigate();
+  const result = useAppSelector((state) => state.auth.result);
+  // const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    if (result.status === "succeeded") {
+      setStore("token", result.token);
+      navigate("/");
+    }
+  }, [result]);
+
   const handleSubmit = (values: LoginModel) => {
-    loginAuth(values.username,values.password)
-    setTimeout(() => {
-      logoutAuth()
-    }, 1000);
+    loginAuth(values.username, values.password);
     // const result = encryptData("Pro247!!");
     // console.log(result);
-
     // console.log("-----------");
     // const restVal = decryptData(result);
     // console.log(restVal);
   };
+
+  useEffect(() => {
+    logoutAuth(); // storage silinecek :)
+  }, []);
   const formRef = React.createRef<FormInstance>();
   const FormItem = Form.Item;
 
@@ -77,8 +91,4 @@ export default function Login() {
       </Form>
     </div>
   );
-}
-
-function logoutAuth() {
-  throw new Error("Function not implemented.");
 }

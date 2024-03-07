@@ -1,34 +1,125 @@
 import React from "react";
 import {
-  MenuUnfoldOutlined,
+  Layout,
+  Button,
+  Menu,
+  Row,
+  Col,
+  Space,
+  Badge,
+  Avatar,
+  Dropdown,
+} from "antd";
+import {
   MenuFoldOutlined,
+  MenuUnfoldOutlined,
+  BellOutlined,
+  LogoutOutlined,
+  UserOutlined,
 } from "@ant-design/icons";
-import { Layout, Button } from "antd";
-
-const { Header } = Layout;
-export interface IHeaderProps {
-  colorBgContainer?: any;
-  collapsed?: any;
-  onCollapse?: any;
+import { Link } from "react-router-dom";
+import Title from "antd/es/typography/Title";
+import profilePicture from '../../images/profile.svg';
+import NotificationDrawer from "../NotificationDrawer";
+interface IHeaderProps {
+  firstName?: string;
+  lastName?: string;
+  collapsed: boolean;
+  colorBgContainer: any;
+  onCollapse: (collapsed: boolean) => void;
 }
 
+const { Header } = Layout;
+
 const Index = (props: IHeaderProps) => {
-  const { collapsed, colorBgContainer, onCollapse } = props;
+  const [visible, setVisible] = React.useState(false);
+  const { collapsed, colorBgContainer, onCollapse, firstName, lastName } =
+    props;
+
+  const onNotificationHandler = () => {
+    setVisible(true);
+  };
+  const hideDrawer = async () => {
+    setVisible(false);
+  };
   return (
-    <div>
-      <Header style={{ padding: 0, background: colorBgContainer }}>
-        <Button
-          type="text"
-          icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-          onClick={() => onCollapse(collapsed)}
-          style={{
-            fontSize: "16px",
-            width: 64,
-            height: 64,
-          }}
-        />
+    <>
+      <Header
+        className={"header-container"}
+        style={{
+          minHeight: 52,
+          padding: 0,
+          background: colorBgContainer,
+        }}
+      >
+        <Row>
+          <Col span={12}>
+            {" "}
+            <Button
+              className="trigger"
+              type="text"
+              icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+              onClick={() => onCollapse(collapsed)}
+              style={{
+                fontSize: "16px",
+                width: 64,
+                height: 64,
+              }}
+            />
+          </Col>
+          <Col
+            style={{
+              padding: "0px 15px 0px 15px",
+              textAlign: "right",
+            }}
+            span={12}
+          >
+            <Space>
+              <Title level={5} style={{ marginRight: 15 }}>
+                {firstName}&nbsp;{lastName}
+              </Title>
+            </Space>
+            <Space>
+              <Badge count={3} style={{ marginRight: 15 }}>
+                <Avatar
+                  size="small"
+                  shape="circle"
+                  alt={"profile"}
+                  icon={<BellOutlined onClick={onNotificationHandler} />}
+                />
+              </Badge>
+
+              <Dropdown
+                className={"header-drop"}
+                dropdownRender={(menu) => (
+                  <Menu>
+                    <Menu.Item key="1" icon={<UserOutlined />}>
+                      <Link to={"/profile"}>Profile</Link>
+                    </Menu.Item>
+                    <Menu.Item key="2" icon={<LogoutOutlined />}>
+                      <Link to={"/admin/logout"}>Logout</Link>
+                    </Menu.Item>
+                  </Menu>
+                )}
+                trigger={["click"]}
+              >
+                <Avatar
+                  size={"small"}
+                  shape="circle"
+                  alt={"profile"}
+                  src={profilePicture}
+                />
+              </Dropdown>
+              <NotificationDrawer
+                visible={visible}
+                showOrHideDrawer={hideDrawer}
+                notificationCount={3}
+              />
+            </Space>
+          </Col>
+        </Row>
       </Header>
-    </div>
+    </>
   );
 };
 

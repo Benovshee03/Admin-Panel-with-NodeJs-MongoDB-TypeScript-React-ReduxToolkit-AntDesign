@@ -4,10 +4,12 @@ import http from "../../common/utils/api";
 import createBaseSlice from "../../network/reducers/core/BaseSlice";
 
 const initalState: LoginState = {
-  status: "idle",
-  statusCode: 0,
-  message: "",
-  token: "",
+  result: {
+    status: "idle",
+    statusCode: 0,
+    message: "",
+    token: "",
+  },
 };
 
 export const authLogin = createAsyncThunk(
@@ -26,7 +28,7 @@ const authSlice = createBaseSlice<LoginState>("auth", initalState, [
   {
     thunk: authLogin,
     onFulfilled: (state, action) => {
-      state = action.payload;
+      state.result = action.payload;
     },
   },
   {
@@ -38,5 +40,3 @@ const authSlice = createBaseSlice<LoginState>("auth", initalState, [
 ]);
 
 export default authSlice.reducer;
-// password encyrption (ui)  -> api   - api decriptyion
-// token    encyrption (api) -> ui    - ui  decriptyion

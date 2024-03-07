@@ -1,12 +1,16 @@
 import React, { useState } from "react";
-import {Button, Layout, theme } from "antd";
+
+import { Layout, theme } from "antd";
 import Sider from "../SiderMenu";
-import Header from "../Header"
+import Header from "../Header";
+
 const { Content } = Layout;
-const AppLayout = ({content}:{content:React.ReactNode}) => {
+
+const AppLayout = ({ content }: { content: React.ReactNode }) => {
   const [collapsed, setCollapsed] = useState(false);
 
-  const {token: { colorBgContainer, borderRadiusLG },
+  const {
+    token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
 
   const onCollapse = (collapsed: boolean) => {
@@ -14,16 +18,16 @@ const AppLayout = ({content}:{content:React.ReactNode}) => {
   };
 
   return (
-    <Layout >
-      
+    <Layout>
       <Sider collapsed={collapsed} onCollapse={onCollapse} />
       <Layout>
-        <Header
+        <Header 
           collapsed={collapsed}
           onCollapse={onCollapse}
           colorBgContainer={colorBgContainer}
+          firstName="John"
+          lastName="Doe" 
         />
-        
         <Content
           style={{
             margin: "24px 16px",
@@ -32,7 +36,6 @@ const AppLayout = ({content}:{content:React.ReactNode}) => {
             borderRadius: borderRadiusLG,
           }}
         >
-
           {content}
         </Content>
       </Layout>
