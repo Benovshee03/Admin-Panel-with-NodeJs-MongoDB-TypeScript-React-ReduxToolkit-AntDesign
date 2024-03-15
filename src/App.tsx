@@ -22,28 +22,12 @@ const App: React.FC = () => {
 
   const handleAddCategory = () => {
     if (socket.current) {
-      // Sunucuya yeni kategori ekleme isteği gönder
       socket.current.emit("addCategory", newCategory);
       setNewCategory("");
     }
   };
   return (
-    <>
-    <Router/>
-    </>
-    // <div>
-    //   <input
-    //     type="text"
-    //     value={newCategory}
-    //     onChange={(e) => setNewCategory(e.target.value)}
-    //   />
-    //   <button onClick={handleAddCategory}>Kategori Ekle</button>
-    //   <ul>
-    //     {categories.map((category, index) => (
-    //       <li key={index}>{category}</li>
-    //     ))}
-    //   </ul>
-    // </div>
+    <Router /> 
   );
 };
 

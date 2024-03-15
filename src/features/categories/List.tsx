@@ -88,7 +88,7 @@ const List: React.FC = () => {
     setOpen({ open: false, content: "" });
   };
 
-  const onNavigateToCreate = () => navigate("/create_category");
+  const onNavigateToCreate = () => navigate("/admin/categories/create");
   const onNavigateToProducts = (id: string) =>
     navigate(`/products/${id}`);
 

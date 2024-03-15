@@ -1,48 +1,53 @@
-import React from "react";
-import { Space, Drawer, Avatar, List, Steps, StepsProps } from "antd";
-
+import React, { useEffect, useRef } from "react";
+import { Space, Drawer, Avatar, List } from "antd";
+import {
+  NotificationOutlined,
+  ClockCircleOutlined,
+  BellOutlined,
+} from "@ant-design/icons";
+import Title from "antd/es/typography/Title";
+import io, { Socket } from "socket.io-client";
+import AppConsts from "../../library/Appconsts";
 interface NotificationDrawerProps {
   visible: boolean;
-  showOrHideDrawer: () => void;
-  notificationCount: number;
+  showOrHideDrawer: () => void; 
+  setNCount: any;
 }
 
 const NotificationDrawer = (props: NotificationDrawerProps) => {
-  const { visible, showOrHideDrawer } = props;
-  const data = [
-    {
-      title: "Ant Design Title 1",
-      current: 0,
-    },
-    {
-      title: "Ant Design Title 2",
-      current: 1,
-      status: "error",
-    },
-    {
-      title: "Ant Design Title 3",
-      current: 2,
-    },
-    {
-      title: "Ant Design Title 4",
-      current: 1,
-    },
-  ];
+  const { visible, showOrHideDrawer, setNCount} = props;
+  const socket = useRef<Socket | null>(null);
 
-  const items = [
-    {
-      title: "Step 1",
-      description: "This is a Step 1.",
-    },
-    {
-      title: "Step 2",
-      description: "This is a Step 2.",
-    },
-    {
-      title: "Step 3",
-      description: "This is a Step 3.",
-    },
-  ];
+  const [notifications, setNotifications] = React.useState<any[]>([]);
+
+  useEffect(() => {
+    socket.current = io(AppConsts.remoteSocketServiceBaseUrl as string);
+    socket.current.on("notification", (notification: any) => {
+      setNotifications((prevNotifications) => [
+        ...prevNotifications,
+        notification,
+      ]);
+    });
+
+    setNotifications([
+      // db den geldi
+      {
+        title: "Ant Design Title 1",
+        current: 0,
+        active: true,
+      },
+    ]);
+
+    return () => {
+      socket.current!.disconnect();
+    };
+  }, []);
+
+  useEffect(() => {
+    setNCount(notifications.length);
+  }, [notifications]);
+  setNCount(notifications.length);
+
   const content = (item: any, index: any) => {
     return (
       <>
@@ -51,7 +56,16 @@ const NotificationDrawer = (props: NotificationDrawerProps) => {
             <List.Item.Meta
               avatar={
                 <Avatar
-                  src={`https://api.dicebear.com/7.x/miniavs/svg?seed=${index}`}
+                  style={{
+                    backgroundColor: item.active ? "#9ADE7B" : "#FFA447",
+                  }}
+                  icon={
+                    item.active ? (
+                      <NotificationOutlined />
+                    ) : (
+                      <ClockCircleOutlined />
+                    )
+                  }
                 />
               }
               title={<a href="https://ant.design">{item.title}</a>}
@@ -66,14 +80,21 @@ const NotificationDrawer = (props: NotificationDrawerProps) => {
   return (
     <Drawer
       width={500}
-      title={"Notifications"}
+      title={
+        <div style={{ textAlign: "center" }}>
+          <Title level={4}>
+            {" "}
+            <BellOutlined /> Notifications
+          </Title>
+        </div>
+      }
       open={visible}
       onClose={showOrHideDrawer}
       destroyOnClose={true}
     >
       <List
         itemLayout="horizontal"
-        dataSource={data}
+        dataSource={notifications}
         renderItem={(item, index) => content(item, index)}
       />
     </Drawer>

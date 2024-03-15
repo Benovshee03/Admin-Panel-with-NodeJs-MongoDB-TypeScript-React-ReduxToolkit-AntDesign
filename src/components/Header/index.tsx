@@ -9,6 +9,7 @@ import {
   Badge,
   Avatar,
   Dropdown,
+  notification,
 } from "antd";
 import {
   MenuFoldOutlined,
@@ -19,8 +20,10 @@ import {
 } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import Title from "antd/es/typography/Title";
-import profilePicture from '../../images/profile.svg';
+import profilePicture from "../../images/profile.svg";
+
 import NotificationDrawer from "../NotificationDrawer";
+
 interface IHeaderProps {
   firstName?: string;
   lastName?: string;
@@ -33,6 +36,7 @@ const { Header } = Layout;
 
 const Index = (props: IHeaderProps) => {
   const [visible, setVisible] = React.useState(false);
+  const [nCount, setNCount] = React.useState(0);
   const { collapsed, colorBgContainer, onCollapse, firstName, lastName } =
     props;
 
@@ -42,6 +46,7 @@ const Index = (props: IHeaderProps) => {
   const hideDrawer = async () => {
     setVisible(false);
   };
+ 
   return (
     <>
       <Header
@@ -80,7 +85,7 @@ const Index = (props: IHeaderProps) => {
               </Title>
             </Space>
             <Space>
-              <Badge count={3} style={{ marginRight: 15 }}>
+              <Badge count={nCount} style={{ marginRight: 15 }}>
                 <Avatar
                   size="small"
                   shape="circle"
@@ -112,8 +117,8 @@ const Index = (props: IHeaderProps) => {
               </Dropdown>
               <NotificationDrawer
                 visible={visible}
-                showOrHideDrawer={hideDrawer}
-                notificationCount={3}
+                showOrHideDrawer={hideDrawer} 
+                setNCount={setNCount}
               />
             </Space>
           </Col>

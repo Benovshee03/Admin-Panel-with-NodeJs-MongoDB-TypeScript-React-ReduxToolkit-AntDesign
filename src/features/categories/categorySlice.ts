@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk } from "@reduxjs/toolkit";
 import { CategoryState } from "./types";
 import { CategoryService } from "../../network/services/CategoryService";
 import Category from "../../network/models/Category";
@@ -89,40 +89,4 @@ const categorySlice = createBaseSlice<CategoryState>("category", initialState, [
 ]);
 
 export default categorySlice.reducer;
-
-// const categorySlice = createSlice({
-//   name: "category",
-//   initialState,
-//   reducers: {},
-//   extraReducers: (builder) => {
-//     builder
-//       .addCase(fetchCategory.fulfilled, (state, action) => {
-//         state.selected = action.payload;
-//         state.status = "succeeded";
-//       })
-//       .addCase(fetchCategories.fulfilled, (state, action) => {
-//         state.list = action.payload;
-//         state.status = "succeeded";
-//       })
-//       .addCase(addCategory.fulfilled, (state, action) => {
-//         state.list.push(action.payload);
-//         state.status = "succeeded";
-//       })
-//       .addCase(updateCategory.fulfilled, (state, action) => {
-//         const index = state.list.findIndex(
-//           (category) => category._id === action.payload._id
-//         );
-//         if (index !== -1) {
-//           state.list[index] = action.payload;
-//         }
-//         state.status = "succeeded";
-//       })
-//       .addCase(deleteCategory.fulfilled, (state, action) => {
-//         state.list = state.list.filter(
-//           (category: Category) => category._id !== (action.payload as any)
-//         );
-//       });
-//   },
-// });
-
-// export default categorySlice.reducer;
+ 
