@@ -8,8 +8,7 @@ import {
   Space,
   Badge,
   Avatar,
-  Dropdown,
-  notification,
+  Dropdown, 
 } from "antd";
 import {
   MenuFoldOutlined,
@@ -58,12 +57,13 @@ const Index = (props: IHeaderProps) => {
         }}
       >
         <Row>
-          <Col span={12}>
-            {" "}
+          <Col span={12}> 
             <Button
               className="trigger"
               type="text"
-              icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+              icon={  <MenuUnfoldOutlined /> }
+
+              // icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
               onClick={() => onCollapse(collapsed)}
               style={{
                 fontSize: "16px",

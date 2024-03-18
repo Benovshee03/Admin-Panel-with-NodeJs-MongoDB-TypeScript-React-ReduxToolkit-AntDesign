@@ -1,8 +1,10 @@
 import React from "react";
 import Logo from "../../images/logo.png";
 import { Avatar, Col, Layout, Menu } from "antd";
+import "./index.less";
 import routeConfig from "../Router/route.config";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom"; 
+
 
 const { Sider } = Layout;
 
@@ -12,22 +14,29 @@ export interface ISiderMenuProps {
   onCollapse: any;
   // onCollapse: (collapsed: boolean) => void;
 }
+
 const Index = (props: ISiderMenuProps) => {
   const { collapsed, onCollapse } = props;
-  const navigate = useNavigate()
-  const location = useLocation()
-  
-  const routeItems = routeConfig.filter((item: any) => item.showInMenu && item.order !== null)
-  .map((a: any, b: any) => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const routeItems = routeConfig
+    .filter((item: any) => item.showInMenu)
+    .map((a: any, b: any) => {
       return {
         key: a.key,
         icon: a.icon,
         label: a.title,
-        onclick:() => {navigate(a.path)}
-      }
+        onClick: () => navigate(a.path),
+      };
     });
 
-    const defaultSelectedKeys = routeConfig.filter((item:any)=>item.showInMenu && item.path == location.pathname).map((item:any)=>item.key)
+  const defaultSelectedKeys = routeConfig
+    .filter(
+      (item: any) => item.showInMenu && item.path === location.pathname
+    )
+    .map((item: any) => item.key);
+
   return (
     <div>
       <Sider
