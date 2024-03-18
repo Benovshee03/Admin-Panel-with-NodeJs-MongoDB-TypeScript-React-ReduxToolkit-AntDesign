@@ -39,7 +39,7 @@ export default function List() {
     dispatch(fetchProducts(categoryId));
   }, [dispatch]);
 
-  const onNavigate = () => navigate("/product/create");
+  const onNavigate = () => navigate("admin/products/create");
   const onDetailsHandle = useCallback((e: boolean, id?: string) => {}, []);
   const onEditHandle = useCallback((e: boolean, id?: string) => {}, []);
   const onDeleteHandle = useCallback((e: boolean, id?: string) => {}, []);
